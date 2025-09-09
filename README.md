@@ -4,16 +4,17 @@
 Limitations on scripts as it stands:
 
 Warning the script is still at an Alpha test stage, so it's a bit buggy (functionality wise).
-Sometimes it loads without a search dialogue. I found that once there at least 1 radio station in the Favourites, users can play that demo radio station, then the Search funtion is uable.
+Sometimes it loads without a search dialogue. I found that once there at least 1 radio station in the Favourites, users can play that demo radio station, then the Search funtions normally.
 The app needs a bit of sorting out, I still learning so any help would be very helpful.
 
 The program is a self-contained Flask web app that lets users:
 
-    Listen to on-line internet radio streams (Shoutcast / Icecast / any MP3 or AAC URL)
-    Search by name, genre, country or language
+    Listen to on-line internet radio streams (Shoutcast / Icecast or any MP3/Ogg or AAC URL)
+    Search by name, genre or country
     Save personal favourites and keep a "recently played" history
 
 I have provided a permanent demo stream (https://cvtfradio.net:8090 , my own radio station) is always available for first-time visitors and should not be deleted!.
+If the default demo radio station is deleted from Favourites, the icons (buttons) do not function anymore, especially the Search icon -You have been warned.
 
 Quick start to run the code:
 
@@ -21,24 +22,26 @@ Quick start to run the code:
     Download / unzip the folder.
     Inside the folder open a terminal and type:
 
-pip install -r requirements.txt
+pip install -r requirements.txt (or even uv sync, if you have it setup).
 python run.py
 
-    Open your browser at http://localhost:9000
-    Run the script in browser, the demo station loads automatically, and the Search panel is open.
+    Open your browser at for example http://localhost:9000
+    Run the script opens up in the browser, the demo radio station loads (should do this automatically) and the Search panel is open.
+    This allows the user to either play the demo or start a new search.
 
+    
 Folder map (what each file does)
 
-run.py	starts the local web-server
-app.py	creates the Flask app and the database
-routes.py	all web pages and JSON APIs
-models.py	database tables (favourites, history)
-radio_service.py	talks to radio-browser.info to find stations
-requirements.txt	list of Python libraries to install
-templates/index.html	the web page you see in the browser
-static/js/radio_player.js	play / pause / volume / search buttons
-static/css/custom.css	colours & layout (optional)
-radio_player.db	your local database (created automatically)
+run.py-starts the local web-server
+app.py-creates the Flask app and the database
+routes.py-all web pages and JSON APIs
+models.py-database tables (favourites, history)
+radio_service.py-talks to radio-browser.info to find stations
+requirements.txt-list of Python libraries to install
+templates/index.htm-the web page you see in the browser
+static/js/radio_player.js-play / pause / volume / search buttons
+static/css/custom.css-colours & layout (optional)
+radio_player.db-your local SQLite database (created automatically)
 
 For developers
 
