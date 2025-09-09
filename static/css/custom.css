@@ -1,0 +1,419 @@
+/* Custom styles for the radio player */
+
+.station-card {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid var(--bs-border-color);
+}
+
+.station-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--bs-primary);
+}
+
+.form-range {
+    accent-color: var(--bs-primary);
+}
+
+#player-card {
+    border-left: 4px solid var(--bs-primary);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Audio player styling */
+#audio-player {
+    display: none;
+}
+
+/* Loading animation */
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Volume slider styling */
+#volume-slider {
+    background: var(--bs-secondary-bg);
+}
+
+/* Station favicon fallback */
+img[src=""], img:not([src]) {
+    display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem 0.75rem;
+    }
+    
+    .btn-group-sm > .btn, .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bs-secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-secondary-color);
+}
+
+/* Toast notifications positioning */
+.alert.position-fixed {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Focus states for accessibility */
+.station-card:focus-within {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Recording button styles */
+#record-btn.btn-danger {
+    animation: pulse-recording 2s infinite;
+}
+
+@keyframes pulse-recording {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+#record-btn:disabled {
+    opacity: 0.6;
+}
+
+/* Station list improvements */
+.station-card .card-title {
+    color: var(--bs-body-color);
+    font-weight: 500;
+}
+
+.station-card .text-muted {
+    font-size: 0.85rem;
+}
+
+/* Player controls alignment */
+.d-flex.align-items-center.justify-content-md-end {
+    gap: 0.5rem;
+}
+
+/* Modal improvements */
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+/* Genre and country select styling */
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Section visibility animations */
+.section-enter {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.section-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Button group improvements */
+.d-grid .btn {
+    text-align: left;
+}
+
+.d-grid .btn i {
+    width: 1.25rem;
+}
+
+/* Metadata display styling */
+#metadata-section {
+    background: var(--bs-body-bg);
+    border-radius: 0.375rem;
+}
+
+#metadata-section .border-top {
+    border-color: var(--bs-border-color) !important;
+}
+
+#metadata-section .fw-medium {
+    color: var(--bs-body-color);
+    font-weight: 500;
+}
+
+#metadata-section .text-muted {
+    font-size: 0.875rem;
+}
+
+/* Connection status badges */
+#connection-status .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Metadata animation for now playing */
+#now-playing {
+    transition: color 0.3s ease;
+}
+
+#now-playing:not(:empty) {
+    color: var(--bs-primary);
+}
+
+/* Metadata rows */
+#metadata-section .d-flex {
+    min-height: 1.5rem;
+    align-items: center;
+}
+
+#metadata-section .col-md-6:first-child {
+    border-right: 1px solid var(--bs-border-color);
+    padding-right: 1rem;
+}
+
+#metadata-section .col-md-6:last-child {
+    padding-left: 1rem;
+}
+
+/* Toggle button styling */
+#search-toggle-btn.btn-secondary,
+#stream-info-toggle-btn.btn-secondary,
+#stations-toggle-btn.btn-secondary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+
+/* Minimalist startup layout */
+body.minimalist-start .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid var(--bs-border-color);
+}
+
+/* Clean blank canvas styling */
+.blank-canvas {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bs-body-bg);
+}
+
+.blank-canvas .welcome-message {
+    text-align: center;
+    color: var(--bs-text-muted);
+}
+
+.blank-canvas .welcome-message i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+/* LED Status Lights */
+.led-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.led {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.red-led {
+    background: #dc3545;
+    box-shadow: 0 0 8px #dc3545, inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border-color: #dc3545;
+}
+
+.green-led {
+    background: #28a745;
+    box-shadow: 0 0 8px #28a745, inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border-color: #28a745;
+    animation: pulse-green 2s infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes pulse-green {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+    }
+}
+
+/* Compact header styling */
+.navbar-brand {
+    font-size: 1rem !important;
+}
+
+/* Collapsible sections styling */
+#search-section,
+#stream-info-section {
+    transition: all 0.3s ease;
+}
+
+#search-section .d-flex.gap-2 {
+    flex-wrap: wrap;
+}
+
+#search-section .d-flex.gap-2 .btn {
+    margin-bottom: 0.5rem;
+}
+
+/* Extended stream info styling */
+#stream-info-section .text-truncate {
+    cursor: pointer;
+}
+
+#stream-info-section .text-truncate:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    /* Stack player controls vertically on smaller screens */
+    .d-flex.align-items-center.justify-content-md-end {
+        justify-content: center !important;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .d-flex.align-items-center.justify-content-md-end .btn {
+        flex-shrink: 0;
+    }
+    
+    .d-flex.align-items-center.justify-content-md-end .d-flex.align-items-center {
+        order: 10; /* Move volume control to end */
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Metadata sections responsive */
+    #metadata-section .col-md-6:first-child {
+        border-right: none;
+        border-bottom: 1px solid var(--bs-border-color);
+        padding-right: 0;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    #metadata-section .col-md-6:last-child {
+        padding-left: 0;
+        padding-top: 0;
+    }
+    
+    /* Search section responsive */
+    #search-section .d-flex.gap-2 {
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+    
+    #search-section .d-flex.gap-2 .btn {
+        margin-bottom: 0;
+    }
+    
+    /* Stream info URL truncation on mobile */
+    #extended-stream-url {
+        max-width: 150px !important;
+    }
+    
+    /* Player card responsive */
+    .card-body .row .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body .row .col-md-6:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .d-flex.align-items-center.justify-content-md-end .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    #volume-slider {
+        width: 80px !important;
+    }
+    
+    /* Station favicon smaller on mobile */
+    #station-favicon {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    
+    /* Compact metadata display */
+    #metadata-section .d-flex,
+    #stream-info-section .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    #metadata-section .fw-medium,
+    #stream-info-section .fw-medium {
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+    }
+}
