@@ -1143,3 +1143,8 @@ document.addEventListener('DOMContentLoaded', () => {
        radioPlayer.loadStation( {{ default_station|tojson }} );
     {% endif %}
 });
+
+
+if (station.url === "https://cvtfradio.net:8090") {
+    // skip rendering the delete button
+}
