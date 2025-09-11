@@ -51,13 +51,6 @@ class RadioPlayer {
         this.stationsSection = document.getElementById('stations-section');
         this.welcomeCanvas = document.getElementById('welcome-canvas');
         
-        // LED status lights
-        this.statusLedRed = document.getElementById('status-led-red');
-        this.statusLedGreen = document.getElementById('status-led-green');
-        
-        // Header search toggle
-        this.headerSearchToggle = document.getElementById('header-search-toggle');
-        
         // Extended metadata elements
         this.extendedNowPlaying = document.getElementById('extended-now-playing');
         this.extendedBitrate = document.getElementById('extended-bitrate');
@@ -107,11 +100,6 @@ class RadioPlayer {
         this.searchToggleBtn.addEventListener('click', () => this.toggleSearchSection());
         this.streamInfoToggleBtn.addEventListener('click', () => this.toggleStreamInfoSection());
         this.stationsToggleBtn.addEventListener('click', () => this.toggleStationsSection());
-        
-        // Header search toggle
-        if (this.headerSearchToggle) {
-            this.headerSearchToggle.addEventListener('click', () => this.toggleSearchSection());
-        }
 
         // Search form
         this.searchForm.addEventListener('submit', (e) => {
@@ -573,7 +561,6 @@ class RadioPlayer {
         // Stop metadata updates and update status
         this.stopMetadataUpdates();
         this.updateConnectionStatus('Disconnected');
-        this.updateLEDStatus(false);
     }
 
     async toggleRecording() {
@@ -777,19 +764,6 @@ class RadioPlayer {
         const icon = this.playPauseBtn.querySelector('i');
         icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
         this.isPlaying = isPlaying;
-        this.updateLEDStatus(isPlaying);
-    }
-
-    updateLEDStatus(isPlaying) {
-        if (this.statusLedRed && this.statusLedGreen) {
-            if (isPlaying) {
-                this.statusLedRed.style.display = 'none';
-                this.statusLedGreen.style.display = 'block';
-            } else {
-                this.statusLedRed.style.display = 'block';
-                this.statusLedGreen.style.display = 'none';
-            }
-        }
     }
 
     setVolume(value) {
@@ -830,9 +804,8 @@ class RadioPlayer {
         this.showError(errorMessage + '. Try another station or refresh the page.');
         this.currentMetadataEl.textContent = 'Stream unavailable';
         
-        // Reset play button and LED status
+        // Reset play button
         this.updatePlayButton(false);
-        this.updateLEDStatus(false);
     }
 
     showLoading(show) {
@@ -1052,18 +1025,15 @@ class RadioPlayer {
     }
 
     setupToggleButtons() {
-        // Show search section by default, hide others for focused UI
-        this.searchSection.style.display = 'block';
+        // Initialize sections as collapsed for minimal UI
+        this.searchSection.style.display = 'none';
         this.streamInfoSection.style.display = 'none';
         this.stationsSection.style.display = 'none';
         
-        // Initialize toggle button states - search active, others inactive
-        this.updateToggleButtonState(this.searchToggleBtn, true);
+        // Initialize toggle button states
+        this.updateToggleButtonState(this.searchToggleBtn, false);
         this.updateToggleButtonState(this.streamInfoToggleBtn, false);
         this.updateToggleButtonState(this.stationsToggleBtn, false);
-        
-        // Initialize LED status to red (stopped)
-        this.updateLEDStatus(false);
     }
 
     toggleSearchSection() {
@@ -1162,7 +1132,14 @@ class RadioPlayer {
     }
 }
 
-// Initialize the radio player when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    new RadioPlayer();
+    /* 1.  always-open Search panel  */
+    $('#search-section').show();
+    $('#toggle-search').on('click', () => $('#search-section').slideToggle());
+    $('#info-toggle').on('click',  () => $('#stream-info').slideToggle());
+
+    /* 2.  auto-load default station injected by backend  */
+    {% if default_station %}
+       radioPlayer.loadStation( {{ default_station|tojson }} );
+    {% endif %}
 });
