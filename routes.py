@@ -3,6 +3,8 @@ from app import app, db
 from models import RadioStation, RecentlyPlayed
 from radio_service import RadioDirectoryService
 import logging
+from flask import abort
+
 
 logger = logging.getLogger(__name__)
 radio_service = RadioDirectoryService()
@@ -114,3 +116,20 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_error(error):
     return jsonify({'success': False, 'error': 'Internal server error'}), 500
+
+
+
+
+PERMANENT_URL = "https://cvtfradio.net:8090"   # same URL you seeded
+
+@app.route('/api/favorites/<int:station_id>', methods=['DELETE'])
+def remove_favorite(station_id):
+    station = RadioStation.query.get_or_404(station_id)
+
+    #  hard lock – even admins cannot delete the demo
+    if station.url == PERMANENT_URL:
+        abort(403, description="Demo station is protected and cannot be removed")
+
+    db.session.delete(station)
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Station removed from favorites'})
