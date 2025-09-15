@@ -8,7 +8,7 @@ class RadioPlayer {
         this.mediaRecorder = null;
         this.recordedChunks = [];
         this.metadataInterval = null;
-        
+
         this.initializeElements();
         this.setupEventListeners();
         this.setupToggleButtons();
@@ -29,13 +29,13 @@ class RadioPlayer {
         this.searchToggleBtn = document.getElementById('search-toggle-btn');
         this.streamInfoToggleBtn = document.getElementById('stream-info-toggle-btn');
         this.stationsToggleBtn = document.getElementById('stations-toggle-btn');
-        
+
         // Display elements
         this.currentStationEl = document.getElementById('current-station');
         this.currentMetadataEl = document.getElementById('current-metadata');
         this.stationFavicon = document.getElementById('station-favicon');
         this.playerCard = document.getElementById('player-card');
-        
+
         // Metadata elements
         this.metadataSection = document.getElementById('metadata-section');
         this.nowPlayingEl = document.getElementById('now-playing');
@@ -44,13 +44,13 @@ class RadioPlayer {
         this.serverTypeEl = document.getElementById('server-type');
         this.listenerCountEl = document.getElementById('listener-count');
         this.connectionStatusEl = document.getElementById('connection-status');
-        
+
         // Section toggles
         this.searchSection = document.getElementById('search-section');
         this.streamInfoSection = document.getElementById('stream-info-section');
         this.stationsSection = document.getElementById('stations-section');
         this.welcomeCanvas = document.getElementById('welcome-canvas');
-        
+
         // Extended metadata elements
         this.extendedNowPlaying = document.getElementById('extended-now-playing');
         this.extendedBitrate = document.getElementById('extended-bitrate');
@@ -60,20 +60,20 @@ class RadioPlayer {
         this.extendedListeners = document.getElementById('extended-listeners');
         this.extendedStreamUrl = document.getElementById('extended-stream-url');
         this.extendedConnectionStatus = document.getElementById('extended-connection-status');
-        
+
         // Form elements
         this.searchForm = document.getElementById('search-form');
         this.searchQuery = document.getElementById('search-query');
         this.streamUrl = document.getElementById('stream-url');
         this.genreSelect = document.getElementById('genre-select');
         this.countrySelect = document.getElementById('country-select');
-        
+
         // Container elements
         this.stationsContainer = document.getElementById('stations-container');
         this.favoritesContainer = document.getElementById('favorites-container');
         this.stationsTitle = document.getElementById('stations-title');
         this.loadingSpinner = document.getElementById('loading-spinner');
-        
+
         // Quick action buttons
         this.popularBtn = document.getElementById('popular-btn');
         this.recentBtn = document.getElementById('recent-btn');
@@ -95,7 +95,7 @@ class RadioPlayer {
         this.favoriteBtn.addEventListener('click', () => this.toggleFavorite());
         this.recordBtn.addEventListener('click', () => this.toggleRecording());
         this.volumeSlider.addEventListener('input', (e) => this.setVolume(e.target.value));
-        
+
         // Toggle buttons
         this.searchToggleBtn.addEventListener('click', () => this.toggleSearchSection());
         this.streamInfoToggleBtn.addEventListener('click', () => this.toggleStreamInfoSection());
@@ -120,7 +120,7 @@ class RadioPlayer {
         try {
             const response = await fetch('/api/genres');
             const data = await response.json();
-            
+
             if (data.success) {
                 this.genreSelect.innerHTML = '<option value="">All Genres</option>';
                 data.genres.forEach(genre => {
@@ -137,9 +137,10 @@ class RadioPlayer {
 
     async loadCountries() {
         try {
+            console.log('Load')
             const response = await fetch('/api/countries');
             const data = await response.json();
-            
+
             if (data.success) {
                 this.countrySelect.innerHTML = '<option value="">All Countries</option>';
                 data.countries.forEach(country => {
@@ -210,16 +211,16 @@ class RadioPlayer {
         }
 
         this.showLoading(true);
-        
+
         try {
             const params = new URLSearchParams();
             if (query) params.append('q', query);
             if (genre) params.append('genre', genre);
             if (country) params.append('country', country);
-            
+
             const response = await fetch(`/api/search?${params}`);
             const data = await response.json();
-            
+
             if (data.success) {
                 this.displayStations(data.stations, 'Search Results');
             } else {
@@ -235,11 +236,11 @@ class RadioPlayer {
 
     async loadPopularStations() {
         this.showLoading(true);
-        
+
         try {
             const response = await fetch('/api/popular');
             const data = await response.json();
-            
+
             if (data.success) {
                 this.displayStations(data.stations, 'Popular Stations');
             } else {
@@ -255,11 +256,11 @@ class RadioPlayer {
 
     async loadRecentlyPlayed() {
         this.showLoading(true);
-        
+
         try {
             const response = await fetch('/api/recently-played');
             const data = await response.json();
-            
+
             if (data.success) {
                 const stations = data.recent.map(item => ({
                     name: item.station_name,
@@ -284,7 +285,7 @@ class RadioPlayer {
         try {
             const response = await fetch('/api/favorites');
             const data = await response.json();
-            
+
             if (data.success) {
                 this.favorites = data.favorites;
                 this.displayFavorites(data.favorites);
@@ -298,7 +299,8 @@ class RadioPlayer {
 
     displayStations(stations, title) {
         this.stationsTitle.textContent = title;
-        
+        console.log('stations', stations)
+
         if (stations.length === 0) {
             this.stationsContainer.innerHTML = `
                 <div class="text-center text-muted py-5">
@@ -311,7 +313,7 @@ class RadioPlayer {
 
         const stationsHTML = stations.map(station => this.createStationHTML(station)).join('');
         this.stationsContainer.innerHTML = stationsHTML;
-        
+
         // Add click listeners to station cards
         this.stationsContainer.querySelectorAll('.station-card').forEach(card => {
             card.addEventListener('click', () => {
@@ -319,6 +321,8 @@ class RadioPlayer {
                 this.playStation(stationData);
             });
         });
+
+        this.stationsSection.style.display = 'block';
     }
 
     displayFavorites(favorites) {
@@ -379,9 +383,9 @@ class RadioPlayer {
     }
 
     createStationHTML(station) {
-        const serverTypeBadge = station.server_type && station.server_type !== 'Unknown' ? 
+        const serverTypeBadge = station.server_type && station.server_type !== 'Unknown' ?
             `<span class="badge bg-secondary me-2">${station.server_type}</span>` : '';
-            
+
         return `
             <div class="row mb-3">
                 <div class="col">
@@ -425,11 +429,11 @@ class RadioPlayer {
 
         this.currentStation = station;
         this.playerCard.style.display = 'block';
-        
+
         // Update display
         this.currentStationEl.textContent = station.name;
         this.currentMetadataEl.textContent = 'Loading...';
-        
+
         // Update favicon
         if (station.favicon) {
             this.stationFavicon.src = station.favicon;
@@ -463,23 +467,23 @@ class RadioPlayer {
             // Reset audio element
             this.audio.pause();
             this.audio.currentTime = 0;
-            
+
             // Try different URL formats for better compatibility
             const streamUrls = this.getStreamUrls(url);
-            
+
             for (const streamUrl of streamUrls) {
                 try {
                     this.currentMetadataEl.textContent = 'Connecting...';
                     this.audio.src = streamUrl;
-                    
+
                     // Add a timeout for connection attempts
                     const playPromise = this.audio.play();
                     const timeoutPromise = new Promise((_, reject) => {
                         setTimeout(() => reject(new Error('Connection timeout')), 15000);
                     });
-                    
+
                     await Promise.race([playPromise, timeoutPromise]);
-                    
+
                     // If successful, add to recently played and return
                     this.addToRecentlyPlayed(this.currentStation);
                     this.showSuccess(`Now playing: ${this.currentStation.name}`);
@@ -488,16 +492,16 @@ class RadioPlayer {
                     // Auto-collapse search section after successful play
                     this.autoCollapseSearchSection();
                     return;
-                    
+
                 } catch (error) {
                     console.warn(`Failed to play ${streamUrl}:`, error);
                     // Continue to next URL
                 }
             }
-            
+
             // If all URLs failed
             throw new Error('All stream URLs failed');
-            
+
         } catch (error) {
             console.error('Playback error:', error);
             this.handleStreamFailure(error);
@@ -506,7 +510,7 @@ class RadioPlayer {
 
     getStreamUrls(originalUrl) {
         const urls = [originalUrl];
-        
+
         // Try common stream URL variations
         if (!originalUrl.includes('/;')) {
             urls.push(originalUrl + '/;');
@@ -515,13 +519,13 @@ class RadioPlayer {
             urls.push(originalUrl + '/stream');
             urls.push(originalUrl + '/;stream.mp3');
         }
-        
+
         return urls;
     }
 
     handleStreamFailure(error) {
         let errorMessage = 'Stream is currently unavailable';
-        
+
         if (error.message.includes('NETWORK_ERR') || error.message.includes('timeout')) {
             errorMessage = 'Connection failed - the station may be offline';
         } else if (error.message.includes('MEDIA_ERR_SRC_NOT_SUPPORTED')) {
@@ -529,7 +533,7 @@ class RadioPlayer {
         } else if (error.message.includes('MEDIA_ERR_DECODE')) {
             errorMessage = 'Unable to decode audio stream';
         }
-        
+
         this.showError(errorMessage + '. Try another station or refresh the page.');
         this.currentMetadataEl.textContent = 'Stream unavailable';
         this.updatePlayButton(false);
@@ -552,12 +556,12 @@ class RadioPlayer {
         this.audio.pause();
         this.audio.currentTime = 0;
         this.currentMetadataEl.textContent = 'Stopped';
-        
+
         // Stop recording if active
         if (this.isRecording) {
             this.stopRecording();
         }
-        
+
         // Stop metadata updates and update status
         this.stopMetadataUpdates();
         this.updateConnectionStatus('Disconnected');
@@ -582,7 +586,7 @@ class RadioPlayer {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioContext.createMediaElementSource(this.audio);
             const destination = audioContext.createMediaStreamDestination();
-            
+
             source.connect(destination);
             source.connect(audioContext.destination); // Continue playing through speakers
 
@@ -631,7 +635,7 @@ class RadioPlayer {
 
         const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
         const url = URL.createObjectURL(blob);
-        
+
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
         const stationName = this.currentStation.name.replace(/[^a-zA-Z0-9]/g, '_');
         const filename = `${stationName}_${timestamp}.webm`;
@@ -642,7 +646,7 @@ class RadioPlayer {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        
+
         URL.revokeObjectURL(url);
         this.recordedChunks = [];
     }
@@ -664,7 +668,7 @@ class RadioPlayer {
         if (!this.currentStation) return;
 
         const isFavorite = this.isStationFavorite(this.currentStation);
-        
+
         try {
             if (isFavorite) {
                 const favoriteStation = this.favorites.find(f => f.url === this.currentStation.url);
@@ -747,10 +751,10 @@ class RadioPlayer {
 
     updateFavoriteButton() {
         if (!this.currentStation) return;
-        
+
         const isFavorite = this.isStationFavorite(this.currentStation);
         const icon = this.favoriteBtn.querySelector('i');
-        
+
         if (isFavorite) {
             icon.className = 'fas fa-heart';
             this.favoriteBtn.className = 'btn btn-danger';
@@ -776,7 +780,7 @@ class RadioPlayer {
             if (this.currentStation.genre) info.push(this.currentStation.genre);
             if (this.currentStation.bitrate) info.push(`${this.currentStation.bitrate}kbps`);
             if (this.currentStation.codec) info.push(this.currentStation.codec.toUpperCase());
-            
+
             this.currentMetadataEl.textContent = info.length > 0 ? info.join(' • ') : 'Now Playing';
         }
     }
@@ -784,7 +788,7 @@ class RadioPlayer {
     handleAudioError(e) {
         console.error('Audio error:', e);
         let errorMessage = 'Playback error occurred';
-        
+
         if (this.audio.error) {
             switch (this.audio.error.code) {
                 case this.audio.error.MEDIA_ERR_NETWORK:
@@ -800,10 +804,10 @@ class RadioPlayer {
                     errorMessage = 'Stream unavailable - this is common with internet radio';
             }
         }
-        
+
         this.showError(errorMessage + '. Try another station or refresh the page.');
         this.currentMetadataEl.textContent = 'Stream unavailable';
-        
+
         // Reset play button
         this.updatePlayButton(false);
     }
@@ -821,9 +825,9 @@ class RadioPlayer {
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         // Auto-remove after 5 seconds
         setTimeout(() => {
             if (toast.parentNode) {
@@ -840,9 +844,9 @@ class RadioPlayer {
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -864,7 +868,7 @@ class RadioPlayer {
         let badgeClass = 'bg-secondary';
         let statusText = status;
 
-        switch(status) {
+        switch (status) {
             case 'Connected':
                 badgeClass = 'bg-success';
                 break;
@@ -885,12 +889,12 @@ class RadioPlayer {
     startMetadataUpdates() {
         // Clear any existing interval
         this.stopMetadataUpdates();
-        
+
         // Start periodic metadata updates
         this.metadataInterval = setInterval(() => {
             this.updateStreamMetadata();
         }, 5000); // Update every 5 seconds
-        
+
         // Initial update
         this.updateStreamMetadata();
     }
@@ -910,7 +914,7 @@ class RadioPlayer {
         try {
             // Try to get metadata from the stream
             const metadata = await this.fetchStreamMetadata(this.currentStation.url);
-            
+
             if (metadata) {
                 if (metadata.title) {
                     this.nowPlayingEl.textContent = metadata.title;
@@ -928,7 +932,7 @@ class RadioPlayer {
                 // Fallback to basic info
                 this.nowPlayingEl.textContent = this.currentStation.name;
             }
-            
+
             // Update extended metadata if section is visible
             if (this.streamInfoSection.style.display !== 'none') {
                 this.updateExtendedMetadata();
@@ -957,7 +961,7 @@ class RadioPlayer {
                         mode: 'cors',
                         credentials: 'omit'
                     });
-                    
+
                     if (response.ok) {
                         const data = await response.text();
                         return this.parseStreamStats(data, statsUrl);
@@ -992,7 +996,7 @@ class RadioPlayer {
                 const titleMatch = data.match(/<SONGTITLE>(.*?)<\/SONGTITLE>/);
                 const bitrateMatch = data.match(/<BITRATE>(.*?)<\/BITRATE>/);
                 const listenersMatch = data.match(/<CURRENTLISTENERS>(.*?)<\/CURRENTLISTENERS>/);
-                
+
                 return {
                     title: titleMatch ? titleMatch[1] : null,
                     bitrate: bitrateMatch ? bitrateMatch[1] : null,
@@ -1011,13 +1015,13 @@ class RadioPlayer {
         try {
             const urlObj = new URL(url);
             const hostname = urlObj.hostname;
-            
+
             // Extract meaningful names from common radio hosts
             if (hostname.includes('cvtfradio')) return 'CVT Radio';
             if (hostname.includes('shoutcast')) return 'Shoutcast Stream';
             if (hostname.includes('icecast')) return 'Icecast Stream';
             if (hostname.includes('radio')) return hostname.split('.')[0].toUpperCase() + ' Radio';
-            
+
             return hostname.replace('www.', '').split('.')[0].toUpperCase() + ' Stream';
         } catch (e) {
             return 'Custom Stream';
@@ -1029,7 +1033,7 @@ class RadioPlayer {
         this.searchSection.style.display = 'none';
         this.streamInfoSection.style.display = 'none';
         this.stationsSection.style.display = 'none';
-        
+
         // Initialize toggle button states
         this.updateToggleButtonState(this.searchToggleBtn, false);
         this.updateToggleButtonState(this.streamInfoToggleBtn, false);
@@ -1040,7 +1044,7 @@ class RadioPlayer {
         const isVisible = this.searchSection.style.display !== 'none';
         this.searchSection.style.display = isVisible ? 'none' : 'block';
         this.updateToggleButtonState(this.searchToggleBtn, !isVisible);
-        
+
         // Hide welcome canvas when opening any section
         if (!isVisible) {
             this.hideWelcomeCanvas();
@@ -1052,12 +1056,12 @@ class RadioPlayer {
         const isVisible = this.streamInfoSection.style.display !== 'none';
         this.streamInfoSection.style.display = isVisible ? 'none' : 'block';
         this.updateToggleButtonState(this.streamInfoToggleBtn, !isVisible);
-        
+
         // Update extended metadata when opening
         if (!isVisible && this.currentStation) {
             this.updateExtendedMetadata();
         }
-        
+
         // Hide welcome canvas when opening any section
         if (!isVisible) {
             this.hideWelcomeCanvas();
@@ -1088,7 +1092,7 @@ class RadioPlayer {
         const isVisible = this.stationsSection.style.display !== 'none';
         this.stationsSection.style.display = isVisible ? 'none' : 'block';
         this.updateToggleButtonState(this.stationsToggleBtn, !isVisible);
-        
+
         // Load popular stations if opening for the first time
         if (!isVisible) {
             this.hideWelcomeCanvas();
@@ -1117,7 +1121,7 @@ class RadioPlayer {
         this.extendedListeners.textContent = this.listenerCountEl.textContent;
         this.extendedStreamUrl.textContent = this.currentStation.url;
         this.extendedStreamUrl.title = this.currentStation.url; // Full URL on hover
-        
+
         // Copy connection status
         this.extendedConnectionStatus.innerHTML = this.connectionStatusEl.innerHTML;
 
@@ -1134,17 +1138,17 @@ class RadioPlayer {
 
 document.addEventListener('DOMContentLoaded', () => {
     /* 1.  always-open Search panel  */
-    $('#search-section').show();
-    $('#toggle-search').on('click', () => $('#search-section').slideToggle());
-    $('#info-toggle').on('click',  () => $('#stream-info').slideToggle());
+    // $('#search-section').show();
+    // $('#toggle-search').on('click', () => $('#search-section').slideToggle());
+    // $('#info-toggle').on('click', () => $('#stream-info').slideToggle());
 
     /* 2.  auto-load default station injected by backend  */
-    {% if default_station %}
-       radioPlayer.loadStation( {{ default_station|tojson }} );
-    {% endif %}
+    //     {% if default_station %}
+    //     radioPlayer.loadStation({{ default_station| tojson }});
+    // {% endif %}
 });
 
 
-if (station.url === "https://cvtfradio.net:8090") {
-    // skip rendering the delete button
-}
+// if (station.url === "https://cvtfradio.net:8090") {
+//     // skip rendering the delete button
+// }

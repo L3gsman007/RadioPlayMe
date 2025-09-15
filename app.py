@@ -7,11 +7,11 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-#  crash if secret not set in production
-if os.getenv("FLASK_ENV") == "production" and not os.getenv("SESSION_SECRET"):
-    raise RuntimeError("SESSION_SECRET must be set in production")
+# #  crash if secret not set in production
+# if os.getenv("FLASK_ENV") == "production" and not os.getenv("SESSION_SECRET"):
+#     raise RuntimeError("SESSION_SECRET must be set in production")
 
-app.secret_key = os.environ["SESSION_SECRET"]   # no fallback
+# app.secret_key = os.environ["SESSION_SECRET"]   # no fallback
 
 
 logging.basicConfig(level=logging.INFO)
