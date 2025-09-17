@@ -14,9 +14,12 @@ class RadioStation(db.Model):
     homepage = db.Column(db.String(500))
     favicon = db.Column(db.String(500))
     tags = db.Column(db.String(500))
+    clickcount = db.Column(db.Integer)  # optional
+    server_type = db.Column(db.String(50))  # optional
+    votes = db.Column(db.Integer)  # optional
     is_favorite = db.Column(db.Boolean, default=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
     def to_dict(self):
         """Convert station to dictionary for JSON serialization"""
         return {
@@ -31,6 +34,9 @@ class RadioStation(db.Model):
             'homepage': self.homepage,
             'favicon': self.favicon,
             'tags': self.tags,
+            'clickcount': self.clickcount,
+            'server_type': self.server_type,
+            'votes': self.votes,
             'is_favorite': self.is_favorite,
             'date_added': self.date_added.isoformat() if self.date_added else None
         }
