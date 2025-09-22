@@ -417,3 +417,32 @@ body.minimalist-start .card {
         font-size: 0.875rem;
     }
 }
+/* Light theme overrides */
+[data-bs-theme="light"] {
+    --bs-body-bg: #ffffff;
+    --bs-body-color: #000;
+    --bs-primary: #0d6efd;
+  }
+  [data-bs-theme="light"] .navbar {
+    background-color: #f8f9fa !important;
+  }
+  [data-bs-theme="light"] .navbar-dark {
+    background-color: #f8f9fa !important;
+  }
+  [data-bs-theme="light"] .navbar-light {
+    background-color: #f8f9fa !important;
+  }
+  [data-bs-theme="light"] .btn-outline-light {
+    color: #000;
+    border-color: rgba(0,0,0,.2);
+  }
+  [data-bs-theme="light"] .btn-outline-light:hover {
+    background-color: rgba(0,0,0,.05);
+  }
+  [data-bs-theme="light"] .led {
+    border-color: rgba(0,0,0,.2);
+  }
+
+  [data-bs-theme="light"] .text-muted {
+    color: #6c757d !important;
+  }

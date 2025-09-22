@@ -19,26 +19,71 @@
                     <i class="fas fa-radio me-1"></i>
                     Radio Player
                 </span>
-                <div class="navbar-nav ms-auto d-flex align-items-center">
-                    <!-- LED Status Lights -->
-                    <div class="led-container me-3">
-                        <div class="led red-led" id="status-led-red" title="Audio stream stopped"></div>
-                        <div class="led green-led" id="status-led-green" title="Audio stream playing"
-                            style="display: none;"></div>
+
+                <div class="d-flex align-items-center ms-auto">
+                    <!-- Hamburger for small screens -->
+                    <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#header-actions-panel" aria-expanded="false"
+                        aria-controls="header-actions-panel" id="header-menu-btn" title="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+
+                    <!-- Desktop actions (hidden on small screens) -->
+                    <div class="d-none d-lg-flex align-items-center">
+                        <!-- LED status lights -->
+                        <!-- <div class="led-container me-3">
+                            <div class="led red-led" id="status-led-red" title="Audio stream stopped"></div>
+                            <div class="led green-led" id="status-led-green" title="Audio stream playing"
+                                style="display: none;"></div>
+                        </div> -->
+
+                        <!-- Search / Favorites / Auth (desktop) -->
+                        <!-- <button class="btn btn-outline-light me-2" id="header-search-toggle" title="Toggle Search">
+                            <i class="fas fa-search"></i>
+                        </button> -->
+                        <button class="btn btn-outline-dark me-2" id="theme-toggle-btn" title="Toggle theme">
+                            <i id="theme-icon" class="fas fa-moon"></i>
+                        </button>
+                        <button class="btn btn-outline-light" id="favorites-btn" data-bs-toggle="modal"
+                            data-bs-target="#favoritesModal" title="View saved favorite stations">
+                            <i class="fas fa-heart me-1"></i> Favorites
+                        </button>
+
+                        {% if current_user %}
+                        <span class="navbar-text mx-2">Welcome, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+                        {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm mx-2">Login</a>
+                        <a href="{{ url_for('signup') }}" class="btn btn-outline-light btn-sm">Sign Up</a>
+                        {% endif %}
                     </div>
-                    <!-- Search Toggle -->
-                    <button class="btn btn-outline-light me-2" id="header-search-toggle" title="Toggle Search">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <!-- Favorites Button -->
-                    <button class="btn btn-outline-light" id="favorites-btn" data-bs-toggle="modal"
-                        data-bs-target="#favoritesModal" title="View saved favorite stations">
-                        <i class="fas fa-heart me-1"></i>
-                        Favorites
-                    </button>
                 </div>
             </div>
         </header>
+
+        <div class="collapse" id="header-actions-panel">
+            <div class="card bg-dark p-2">
+                <div class="d-grid gap-2">
+                    {% if current_user %}
+                    <span class="text-light px-2 align-self-start">Welcome, {{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Login</a>
+                    <a href="{{ url_for('signup') }}" class="btn btn-outline-light btn-sm">Sign Up</a>
+                    {% endif %}
+                    <button class="btn btn-outline-light btn-sm" onclick="toggleSearchPanelMobile()">
+                        <i class="fas fa-search me-1"></i>Search
+                    </button>
+                    <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#favoritesModal">
+                        <i class="fas fa-heart me-1"></i> Favorites
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
 
         <div class="row">
             <!-- Main Content - Full Width -->
@@ -161,6 +206,48 @@
                     </div>
                 </div>
 
+                <!-- Stream Info Section - Collapsible -->
+                <div class="card mb-4" id="stream-info-section" style="display: none;">
+                    <div class="card-body" style="padding-top: 0px !important;">
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Stream Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Now Playing:</span>
+                                    <span id="now-playing" class="fw-medium">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Bitrate:</span>
+                                    <span id="stream-bitrate" class="fw-medium">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Format:</span>
+                                    <span id="stream-format" class="fw-medium">-</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Server:</span>
+                                    <span id="server-type" class="fw-medium">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Listeners:</span>
+                                    <span id="listener-count" class="fw-medium">-</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Status:</span>
+                                    <span id="connection-status" class="fw-medium">
+                                        <span class="badge bg-secondary">Disconnected</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Search Section - Collapsible -->
                 <div class="card mb-4" id="search-section">
                     <div class="card-body">
@@ -222,56 +309,7 @@
                     </div>
                 </div>
 
-                <!-- Stream Info Section - Collapsible -->
-                <div class="card mb-4" id="stream-info-section" style="display: none;">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Stream Information
-                        </h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Now Playing:</span>
-                                    <span id="extended-now-playing" class="fw-medium">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Bitrate:</span>
-                                    <span id="extended-bitrate" class="fw-medium">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Format:</span>
-                                    <span id="extended-format" class="fw-medium">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Sample Rate:</span>
-                                    <span id="extended-sample-rate" class="fw-medium">-</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Server:</span>
-                                    <span id="extended-server" class="fw-medium">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Listeners:</span>
-                                    <span id="extended-listeners" class="fw-medium">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Stream URL:</span>
-                                    <span id="extended-stream-url" class="fw-medium text-truncate"
-                                        style="max-width: 250px;">-</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Connection Status:</span>
-                                    <span id="extended-connection-status" class="fw-medium">
-                                        <span class="badge bg-secondary">Disconnected</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Station List - Initially Hidden -->
                 <div class="card" id="stations-section" style="display: none;">
@@ -324,7 +362,7 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/radio_player.js') }}"></script>
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             $('#search-section').show();
             $('#toggle-search').on('click', () => $('#search-section').slideToggle());
@@ -351,6 +389,49 @@
             radioPlayer.showError('Failed to load default station. Please try searching for a station.');
         }
     });
+    </script> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show the search panel by default
+            $('#search-section').show();
+            // Use header button to toggle search panel
+            $('#header-search-toggle').on('click', () => $('#search-section').slideToggle());
+
+            const radioPlayer = new RadioPlayer();
+            try {
+                {% if default_station %}
+                radioPlayer.playStation({{ default_station | tojson | safe }});
+        {% else %}
+        radioPlayer.playStation({
+            name: "CVT Radio",
+            url: "https://cvtfradio.net:8090",
+            genre: "Custom",
+            country: "",
+            bitrate: 0,
+            codec: "Unknown",
+            server_type: "Custom",
+            favicon: ""
+        });
+        {% endif %}
+          } catch (error) {
+            console.error('Error loading default station:', error);
+            radioPlayer.showError('Failed to load default station. Please try searching for a station.');
+        }
+        });
+    </script>
+
+    <script>
+        function toggleSearchPanelMobile() {
+            // Toggle the main search section on mobile
+            if (typeof $ !== 'undefined') {
+                $('#search-section').slideToggle();
+            } else if (typeof document !== 'undefined') {
+                // Fallback
+                const el = document.getElementById('search-section');
+                if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+            }
+        }
     </script>
 </body>
 
