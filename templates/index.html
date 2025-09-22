@@ -71,6 +71,9 @@
                     <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Login</a>
                     <a href="{{ url_for('signup') }}" class="btn btn-outline-light btn-sm">Sign Up</a>
                     {% endif %}
+                    <button class="btn btn-outline-dark" id="theme-toggle-btn" title="Toggle theme">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                    </button>
                     <button class="btn btn-outline-light btn-sm" onclick="toggleSearchPanelMobile()">
                         <i class="fas fa-search me-1"></i>Search
                     </button>
@@ -312,19 +315,28 @@
 
 
                 <!-- Station List - Initially Hidden -->
-                <div class="card" id="stations-section" style="display: none;">
+                <div class="card mb-4" id="stations-section">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" id="stations-title">Popular Stations</h5>
-                        <div id="loading-spinner" class="spinner-border spinner-border-sm" role="status"
-                            style="display: none;">
-                            <span class="visually-hidden">Loading...</span>
+                        <h5 class="card-title mb-0" id="stations-title">Search Results</h5>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary mb-2" id="stationsSectionToggle" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#stationsSectionCollapse" aria-expanded="true"
+                                aria-controls="stationsSectionCollapse">
+                                <span class="collapse-icon fas fa-chevron-down"></span>
+                            </button>
+                            <div id="loading-spinner" class="spinner-border spinner-border-sm "
+                                style="margin-left: 10px;" role="status" style="display: none;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div id="stations-container">
-                            <div class="text-center text-muted py-5">
-                                <i class="fas fa-radio fa-3x mb-3"></i>
-                                <p>Popular radio stations from around the world</p>
+                    <div class="collapse show" id="stationsSectionCollapse">
+                        <div class="card-body">
+                            <div id="stations-container">
+                                <div class="text-center text-muted py-5">
+                                    <i class="fas fa-radio fa-3x mb-3"></i>
+                                    <p>Popular radio stations from around the world</p>
+                                </div>
                             </div>
                         </div>
                     </div>
