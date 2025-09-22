@@ -1,5 +1,18 @@
 from app import db
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class RadioStation(db.Model):
     """Model for storing favorite radio stations"""
@@ -41,17 +54,30 @@ class RadioStation(db.Model):
             'date_added': self.date_added.isoformat() if self.date_added else None
         }
 
-class RecentlyPlayed(db.Model):
-    """Model for tracking recently played stations"""
+class UserFavorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    station_id = db.Column(db.Integer, db.ForeignKey('radio_station.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='favorites')
+    station = db.relationship('RadioStation', backref='favorited_by')
+
+class RecentlyPlayed(db.Model):
+    """Model for tracking recently played stations per-user (or global if not logged in)"""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     station_name = db.Column(db.String(200), nullable=False)
     station_url = db.Column(db.String(500), nullable=False)
     played_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
+    user = db.relationship('User', backref='recently_played')
+
     def to_dict(self):
         return {
             'id': self.id,
             'station_name': self.station_name,
             'station_url': self.station_url,
-            'played_at': self.played_at.isoformat() if self.played_at else None
+            'played_at': self.played_at.isoformat() if self.played_at else None,
+            'user_id': self.user_id
         }
