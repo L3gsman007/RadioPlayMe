@@ -22,7 +22,7 @@
 
                 <div class="d-flex align-items-center" style="gap: 8px;">
                     <!-- Hamburger for small screens -->
-                    <button class="btn btn-outline-dark" id="theme-toggle-btn" title="Toggle theme">
+                    <button class="btn btn-outline-dark d-flex d-lg-none" id="theme-toggle-btn" title="Toggle theme">
                         <i id="theme-icon" class="fas fa-moon"></i>
                     </button>
                     <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="collapse"
@@ -403,6 +403,7 @@
     });
     </script> -->
 
+    <!-- File: D:\other\RadioPlayMe-main\RadioPlayMe\templates/index.html -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Show the search panel by default
@@ -411,6 +412,19 @@
             $('#header-search-toggle').on('click', () => $('#search-section').slideToggle());
 
             const radioPlayer = new RadioPlayer();
+
+            // Try to restore last played station from localStorage
+            try {
+                const last = localStorage.getItem('lastStation');
+                if (last) {
+                    const station = JSON.parse(last);
+                    radioPlayer.playStation(station);
+                    return;
+                }
+            } catch (e) {
+                // Ignore parsing/storage errors; will fall back to default
+            }
+
             try {
                 {% if default_station %}
                 radioPlayer.playStation({{ default_station | tojson | safe }});
@@ -426,11 +440,11 @@
             favicon: ""
         });
         {% endif %}
-          } catch (error) {
+      } catch (error) {
             console.error('Error loading default station:', error);
             radioPlayer.showError('Failed to load default station. Please try searching for a station.');
         }
-        });
+    });
     </script>
 
     <script>
