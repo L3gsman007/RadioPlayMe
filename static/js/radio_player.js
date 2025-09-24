@@ -571,6 +571,13 @@ class RadioPlayer {
       return;
     }
 
+    // Persist last played station to localStorage
+    try {
+      localStorage.setItem("lastStation", JSON.stringify(station));
+    } catch (e) {
+      // Ignore storage errors
+    }
+
     // Stop recording if active
     if (this.isRecording) {
       this.stopRecording();
