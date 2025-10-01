@@ -446,3 +446,44 @@ body.minimalist-start .card {
   [data-bs-theme="light"] .text-muted {
     color: #6c757d !important;
   }
+
+
+
+  /* Floating Scroll-to-Top Button styling aligned with theme */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    z-index: 9999;
+    background-color: #0d6efd;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(0,0,0,.25);
+  }
+  html[data-bs-theme="dark"] .scroll-to-top {
+    background-color: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 6px 14px rgba(0,0,0,.4);
+  }
+  .scroll-to-top.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .scroll-to-top:hover {
+    transform: translateY(0) scale(1.05);
+  }
+  .scroll-to-top i {
+    pointer-events: none;
+  }

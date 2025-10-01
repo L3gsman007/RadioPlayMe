@@ -22,13 +22,14 @@
 
                 <div class="d-flex align-items-center" style="gap: 8px;">
                     <!-- Hamburger for small screens -->
-                    <button class="btn btn-outline-dark d-flex d-lg-none" id="theme-toggle-btn" title="Toggle theme">
-                        <i id="theme-icon" class="fas fa-moon"></i>
-                    </button>
+
                     <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#header-actions-panel" aria-expanded="false"
                         aria-controls="header-actions-panel" id="header-menu-btn" title="Menu">
                         <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="btn btn-outline-dark me-2" id="theme-toggle-btn" title="Toggle theme">
+                        <i id="theme-icon" class="fas fa-moon"></i>
                     </button>
 
                     <!-- Desktop actions (hidden on small screens) -->
@@ -44,9 +45,7 @@
                         <!-- <button class="btn btn-outline-light me-2" id="header-search-toggle" title="Toggle Search">
                             <i class="fas fa-search"></i>
                         </button> -->
-                        <button class="btn btn-outline-dark me-2" id="theme-toggle-btn" title="Toggle theme">
-                            <i id="theme-icon" class="fas fa-moon"></i>
-                        </button>
+
                         <button class="btn btn-outline-light" id="favorites-btn" data-bs-toggle="modal"
                             data-bs-target="#favoritesModal" title="View saved favorite stations">
                             <i class="fas fa-heart me-1"></i> Favorites
@@ -459,6 +458,33 @@
             }
         }
     </script>
+
+
+    <!-- Floating Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Back to top" title="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <script>
+        (function () {
+            const btn = document.getElementById('scrollToTopBtn');
+            if (!btn) return;
+            const toggle = () => {
+                if (window.scrollY > 300) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
+            };
+            window.addEventListener('scroll', toggle, { passive: true });
+            btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            toggle();
+        })();
+    </script>
+
+
+
+
 </body>
 
 </html>
